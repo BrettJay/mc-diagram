@@ -4,6 +4,7 @@ import { waitUntil, waitFor } from '@motion-canvas/core/lib/flow';
 import { Line, Rect, Text } from '@motion-canvas/2d/lib/components';
 import { Gradient } from '@motion-canvas/2d/lib/partials';
 import { Vector2 } from '@motion-canvas/core/lib/types';
+import { createSignal } from '@motion-canvas/core/lib/signals'
 
 export default makeScene2D(function*(view) {
   const ItemOne = createRef<Rect>();
@@ -12,6 +13,11 @@ export default makeScene2D(function*(view) {
 
   const myLine = createRef<Line>();
   const scale = 1;
+
+  const arrowOffset = 8
+
+  const arrowStart = createSignal(() => [ItemOne().position.x(), ItemOne().position.y() + (ItemOne().height() / 2) + arrowOffset]);
+  const arrowEnd = createSignal(() => [ItemThree().position.x(), ItemThree().position.y() - (ItemThree().height() / 2) - arrowOffset]);
 
   const Scene = {
     width: 1920 * scale,
@@ -22,6 +28,19 @@ export default makeScene2D(function*(view) {
 
   yield view.add(
     <>
+      <Line
+        ref={myLine}
+        stroke={'#8F5AFF'}
+        lineWidth={8}
+        endArrow
+        radius={480}
+        lineCap="round"
+        opacity={0}
+        points={[
+          arrowStart,
+          arrowEnd
+        ]}
+      />
       <Rect
         offset={-1}
         x={-(Scene.width / 2) + (Scene.margin)}
@@ -33,7 +52,7 @@ export default makeScene2D(function*(view) {
         justifyContent='center'
         alignItems='stretch'
         clip
-        gap={42}
+        gap={64}
         padding={24}
       >
         <Rect
@@ -80,8 +99,6 @@ export default makeScene2D(function*(view) {
         >
           <Text fontFamily="JetBrains Mono" fill="hsla(249, 100%, 90%, 1)">Item two</Text>
         </Rect>
-        <Rect justifyContent={'center'}>
-        </Rect>
         <Rect
           lineWidth={4}
           ref={ItemThree}
@@ -105,19 +122,6 @@ export default makeScene2D(function*(view) {
           <Text fontFamily="JetBrains Mono" fill="hsla(249, 100%, 90%, 1)">Item three</Text>
         </Rect>
       </Rect>
-      <Line
-        ref={myLine}
-        stroke={'#8F5AFF'}
-        lineWidth={8}
-        endArrow
-        radius={480}
-        lineCap="round"
-        opacity={0}
-        points={[
-          [ItemOne().position.x(), ItemOne().position.y() + (ItemOne().height() / 2 )],
-          [ItemThree().position.x(), ItemThree().position.y() - (ItemThree().height() / 2)]
-        ]}
-      />
     </>,
   );
 
@@ -135,8 +139,6 @@ export default makeScene2D(function*(view) {
 
   yield* waitUntil('item_three_grow');
   yield* ItemThree().height(400, 0.5);
-  
-  // does Line points={[...]} need to use signals to keep its points pinned to ItemOne and ItemThree
 
   yield* waitFor(3);
 });
