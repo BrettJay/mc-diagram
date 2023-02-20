@@ -13,6 +13,14 @@
     {
       "name": "item_three",
       "targetTime": 1
+    },
+    {
+      "name": "show_arrow",
+      "targetTime": 1.5
+    },
+    {
+      "name": "item_three_grow",
+      "targetTime": 2
     }
   ]
 }

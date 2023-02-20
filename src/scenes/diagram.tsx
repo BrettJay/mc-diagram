@@ -80,19 +80,8 @@ export default makeScene2D(function*(view) {
         >
           <Text fontFamily="JetBrains Mono" fill="hsla(249, 100%, 90%, 1)">Item two</Text>
         </Rect>
-        <Line
-          ref={myLine}
-          stroke={'#8F5AFF'}
-          lineWidth={8}
-          endArrow
-          radius={480}
-          lineCap="round"
-          position={[0, 0]}
-          points={[
-            [960, 0],
-            [960, 90],
-          ]}
-        />
+        <Rect justifyContent={'center'}>
+        </Rect>
         <Rect
           lineWidth={4}
           ref={ItemThree}
@@ -116,6 +105,19 @@ export default makeScene2D(function*(view) {
           <Text fontFamily="JetBrains Mono" fill="hsla(249, 100%, 90%, 1)">Item three</Text>
         </Rect>
       </Rect>
+      <Line
+        ref={myLine}
+        stroke={'#8F5AFF'}
+        lineWidth={8}
+        endArrow
+        radius={480}
+        lineCap="round"
+        opacity={0}
+        points={[
+          [ItemOne().position.x(), ItemOne().position.y() + (ItemOne().height() / 2 )],
+          [ItemThree().position.x(), ItemThree().position.y() - (ItemThree().height() / 2)]
+        ]}
+      />
     </>,
   );
 
@@ -127,6 +129,14 @@ export default makeScene2D(function*(view) {
 
   yield* waitUntil('item_three');
   yield* ItemThree().opacity(1, 0.5);
+
+  yield* waitUntil('show_arrow');
+  yield* myLine().opacity(1, 0.5);
+
+  yield* waitUntil('item_three_grow');
+  yield* ItemThree().height(400, 0.5);
+  
+  // does Line points={[...]} need to use signals to keep its points pinned to ItemOne and ItemThree
 
   yield* waitFor(3);
 });
